@@ -60,7 +60,7 @@ async def place_driveby_order(request: Request):
     context = {
         'request': request,
         "status_initial": "Order is confirmed",
-        "status_driveby": f"Driveby order is confirmed, ETA is {response.json()['dropoff_eta']}",
+        "status_driveby": f"Driveby-order is confirmed, ETA is {response.json()['dropoff_eta']}",
         "status_follow": "",
         "driveby_order_visible": True,
         "follow_order_visible": True,
@@ -81,7 +81,7 @@ async def place_follow_order(request: Request):
         'request': request,
         "status_initial": "Order is confirmed",
         "status_driveby": "Driveby order is confirmed",
-        "status_follow": f"Follow order is confirmed, ETA is {response.json()['dropoff_eta']}",
+        "status_follow": f"Follow-order is confirmed, ETA is {response.json()['dropoff_eta']}",
         "driveby_order_visible": True,
         "follow_order_visible": True,
         "final": True}

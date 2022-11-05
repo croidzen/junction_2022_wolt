@@ -100,6 +100,6 @@ def get_driveby_offer(order_id):
         # get available merchants on existing order route
         # get best match of interests and available stores
         
-        return {"merchant": "Starbucks",
-            "item": "Cheesecake",
+        return {"merchant": "R-Kionsi",
+            "item": "Vitamin Well",
             "fee": "1"}

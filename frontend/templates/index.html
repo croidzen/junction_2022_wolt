@@ -19,36 +19,59 @@
 
 
   <form action="/place_initial_order" method="post">
+    <label>Item: </label>
+    <input type="text" name="item" value="Sushi">
+    <br>
     <label>Pickup location: </label>
-    <input type="text" id="fname" value="Address">
+    <input type="text" name="pickup" value="Arkadiankatu 3-6">
     <br>
     <label>Dropoff location: </label>
-    <input type="text" id="fname" value="Address">
+    <input type="text" name="dropoff" value="Otakaari 24, 02150 Espoo">
     <br>
+    {% if not driveby_order_visible %}
     <input type="submit" value="Order">
+    <br>
+    {% else %}
+    {{ status_initial }}
+    <br>
+    <br>
+    <br>
+    {% endif %}
   </form>
 
-  {% if waypoint_order_visible %}
-  <form action="/place_waypoint_order" method="post">
-    <label>Additional item can be offered on the way: </label>
-    <input type="text" id="fname" value="Vitamin Well">
+  {% if driveby_order_visible %}
+  <form action="/place_driveby_order" method="post">
+    <label>Additional item can be fetched on the way: </label>
+    <input type="text" value="Vitamin Well">
     <br>
+    {% if not follow_order_visible %}
     <input type="submit" value="Order">
+    <br>
+    {% else %}
+    {{ status_driveby }}
+    <br>
+    <br>
+    <br>
+    {% endif %}
   </form>
   {% endif %}
 
   {% if follow_order_visible %}
   <form action="/place_follow_order" method="post">
-    <label>Want the driver to take something with him/her?: </label>
-    <input type="text" id="fname" value="Empty bottles">
+    <label>Want the driver to pickup another delivery at your place? Destination: </label>
+    <input type="text" value="Bottle return station, Helsinki">
     <br>
+    {% if not final %}
     <input type="submit" value="Order">
+    <br>
+    {% else %}
+    {{ status_follow }}
+    <br>
+    <br>
+    <br>
+    {% endif %}
   </form>
   {% endif %}
-
-  <p>
-    Order status: {{ status }}
-  </p>
 
 </body>
 

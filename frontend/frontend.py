@@ -3,6 +3,8 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+import requests
+
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -14,40 +16,73 @@ def some_function(value):
     
 
 @app.get("/", response_class=HTMLResponse)
-async def read_item(request: Request):
+def get_page(request: Request):
     context = {
         "request": request,
-        "status": "Waiting for order",
-        "waypoint_order_visible": False,
-        "follow_order_visible": False}
+        "status_initial": "",
+        "status_driveby": "",
+        "status_follow": "",
+        "driveby_order_visible": False,
+        "follow_order_visible": False,
+        "final": False}
     return templates.TemplateResponse("index.html", context=context)
 
 
 @app.post("/place_initial_order")
-def place_initial_order(request: Request):
+async def place_initial_order(request: Request):
+    form_data = await request.form()
+    url = "http://localhost:8000/v1/place_order"
+    payload = '''{
+        "pickup": "%s",
+        "dropoff": "%s"
+    }'''%(form_data['pickup'], form_data['dropoff'])
+    response = requests.get(url=url, data=payload)
     context = {
         'request': request,
-        "status": "Initial order placed",
-        "waypoint_order_visible": True,
-        "follow_order_visible": False}
+        "status_initial": f"Order is confirmed, ETA is {response.json()['dropoff_eta']}",
+        "status_driveby": "",
+        "status_follow": "",
+        "driveby_order_visible": True,
+        "follow_order_visible": False,
+        "final": False}
     return templates.TemplateResponse('index.html', context=context)
 
 
-@app.post("/place_waypoint_order")
-def place_waypoint_order(request: Request):
+@app.post("/place_driveby_order")
+async def place_driveby_order(request: Request):
+    form_data = await request.form()
+    url = "http://localhost:8000/v1/place_order"
+    payload = '''{
+        "pickup": "",
+        "dropoff": ""
+    }'''
+    response = requests.get(url=url, data=payload)
     context = {
         'request': request,
-        "status": "Waypoint order placed",
-        "waypoint_order_visible": True,
-        "follow_order_visible": True}
+        "status_initial": "Order is confirmed",
+        "status_driveby": f"Driveby order is confirmed, ETA is {response.json()['dropoff_eta']}",
+        "status_follow": "",
+        "driveby_order_visible": True,
+        "follow_order_visible": True,
+        "final": False}
     return templates.TemplateResponse('index.html', context=context)
 
 
 @app.post("/place_follow_order")
-def place_follow_order(request: Request):
+async def place_follow_order(request: Request):
+    form_data = await request.form()
+    url = "http://localhost:8000/v1/place_order"
+    payload = '''{
+        "pickup": "",
+        "dropoff": ""
+    }'''
+    response = requests.get(url=url, data=payload)
     context = {
         'request': request,
-        "status": "Follow order placed",
-        "waypoint_order_visible": True,
-        "follow_order_visible": True}
+        "status_initial": "Order is confirmed",
+        "status_driveby": "Driveby order is confirmed",
+        "status_follow": f"Follow order is confirmed, ETA is {response.json()['dropoff_eta']}",
+        "driveby_order_visible": True,
+        "follow_order_visible": True,
+        "final": True}
     return templates.TemplateResponse('index.html', context=context)

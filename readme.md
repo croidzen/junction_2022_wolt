@@ -1,6 +1,6 @@
 # Junction Hackathon 2022: Wolt challenge
 
-## Mockup to show the combinatoion of multiple Wolt deliveries
+## Showcase of combining multiple Wolt deliveries
 
 A Wolt delivery usually takes two rides/ways: One to the pickup address and another one to the destionation. To reduce the number of rides per delivery, we can
 - Offer to deliver further items, that can be picked up on the route of the existing delivery
